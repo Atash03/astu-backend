@@ -1,5 +1,6 @@
 node_modules
 node_modules/
+
 .vscode
 *.log
 *.old
@@ -17,6 +18,7 @@ text
 tst.*
 old
 .env
+.env.production
 /agtsTestDb.json
 /src/db/jsonMockDb/data.json
 .env.dev
