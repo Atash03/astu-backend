@@ -1,0 +1,1 @@
+ALTER TABLE "lite_banks" ADD COLUMN "cvc_required" boolean DEFAULT true NOT NULL;
