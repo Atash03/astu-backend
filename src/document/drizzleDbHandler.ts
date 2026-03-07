@@ -68,10 +68,24 @@ export class DrizzleDbHandler extends BaseDocDbHandler {
   }
 
   override async getByName(tx: DrizzleTx, name: string) {
+    const tableName = this.#tableName
+    console.log(`[getByName] table=${tableName}, name=${name}`)
+
+    // Try the standard Drizzle query builder approach
     const rows = await tx.select().from(this.documentTable).where(sql.raw(`name = '${name}'`))
-    const row = rows[0]
+    console.log(`[getByName] drizzle query rows:`, JSON.stringify(rows))
+
+    if (rows.length > 0)
+      return rows[0]
+
+    // Fallback: use raw SQL execute if the query builder returns nothing
+    console.log(`[getByName] drizzle query returned 0 rows, trying raw execute fallback`)
+    const rawResult = await tx.execute(sql`SELECT * FROM ${sql.raw(tableName)} WHERE name = ${name}`)
+    console.log(`[getByName] raw execute result:`, JSON.stringify(rawResult))
+
+    const row = rawResult[0]
     if (!row)
-      throw DocumentError.DoesNotExist(-1, this.#tableName)
+      throw DocumentError.DoesNotExist(-1, tableName)
     return row
   }
 
