@@ -5,14 +5,14 @@
   "author": "Astronavigator <digital.astronavigator@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "dotenv -e .env.dev -- jest -w 1",
+    "test": "bun --env-file=.env.dev jest -w 1",
     "generate": "drizzle-kit generate:pg",
-    "migrate": "dotenv -e .env.production yarn tsx src/migrate.ts",
-    "migrate-dev": "dotenv -e .env.dev yarn tsx src/migrate.ts",
-    "dev": "dotenv -e .env.dev tsx watch src/web_server/srv.ts",
-    "prod": "dotenv -e .env.production tsx src/web_server/srv.ts",
-    "init-tables": "dotenv -e .env.production tsx src/initTables.ts",
-    "init-tables-dev": "dotenv -e .env.dev tsx src/initTables.ts",
+    "migrate": "bun --env-file=.env.production src/migrate.ts",
+    "migrate-dev": "bun --env-file=.env.dev src/migrate.ts",
+    "dev": "bun --env-file=.env.dev --watch src/web_server/srv.ts",
+    "prod": "bun --env-file=.env.production src/web_server/srv.ts",
+    "init-tables": "bun --env-file=.env.production src/initTables.ts",
+    "init-tables-dev": "bun --env-file=.env.dev src/initTables.ts",
     "clean-json-db": "rm -f src/db/jsonMockDb/data.json"
   },
   "devDependencies": {

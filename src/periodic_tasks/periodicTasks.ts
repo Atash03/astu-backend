@@ -1,5 +1,5 @@
 import { DbHandlerFabric, DbHandlerType } from '../document/dbHandlerFabric'
-import { IPeriodicTaskModule, TaskData, bullJobData } from '@/periodic_tasks/types'
+import type { IPeriodicTaskModule, TaskData, bullJobData } from '@/periodic_tasks/types'
 import { logMethod, logger } from '@/lib/logger'
 import { InitError, RtsError } from '@/lib/errors'
 import { periodicTasksEvents } from '@/periodic_tasks/events'

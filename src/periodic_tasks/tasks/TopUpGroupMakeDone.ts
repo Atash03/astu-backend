@@ -1,5 +1,5 @@
 import { DbHandlerFabric } from '@/document/dbHandlerFabric'
-import { TaskData } from '../types'
+import type { TaskData } from '../types'
 import { TaskLogger } from '../taskLogger'
 import { TopUpGroup, TopUpGroupStatus } from '@/document/topUpGroup/topUpGroup'
 

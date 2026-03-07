@@ -3,7 +3,7 @@ import { DocumentError } from './errors'
 import { logColors, logMethod, logger } from '@/lib/logger'
 // import { periodicTasksEvents } from '@/periodic_tasks/events'
 import { getTaskQueue } from '@/periodic_tasks/queue'
-import { bullJobData } from '@/periodic_tasks/types'
+import type { bullJobData } from '@/periodic_tasks/types'
 // import { PeriodicTasks } from './periodicTaskInfo/periodicTaskInfo'
 
 const logDocumentMethod = logMethod('[DOCUMENT]', true, logColors.green)

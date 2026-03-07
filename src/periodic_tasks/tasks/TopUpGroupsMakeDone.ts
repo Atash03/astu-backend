@@ -1,5 +1,5 @@
 import { logger } from '@/lib/logger'
-import { TaskData } from '../types'
+import type { TaskData } from '../types'
 import { TopUpGroup, TopUpGroupStatus } from '@/document/topUpGroup/topUpGroup'
 import { DbHandlerFabric } from '@/document/dbHandlerFabric'
 import { RtsError } from '@/lib/errors'
