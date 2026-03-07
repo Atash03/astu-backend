@@ -37,6 +37,8 @@ export abstract class RtsEntity<TDocFields extends IEntityFields=IEntityFields> 
   async createNew() {
     await this._db.transaction(async (tx: unknown) => {
       const row = await this._db.createNew(tx, this._fields) as TDocFields
+      if (!row || !row.id)
+        throw new DocumentError('INTERNAL-ERROR', 'createNew returned invalid row', { fields: this._fields })
       await this.saveDataFields(tx, row.id)
       const dataFields = await this._db.getAllDataFields(tx, row.id)
       this._fields = {...row}

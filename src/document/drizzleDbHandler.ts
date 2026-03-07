@@ -70,6 +70,8 @@ export class DrizzleDbHandler extends BaseDocDbHandler {
   override async getByName(tx: DrizzleTx, name: string) {
     const table = this.documentTable as TTableWithNameFields
     const [row] = await tx.select().from(this.documentTable).where(eq(table.name, name))
+    if (!row)
+      throw DocumentError.DoesNotExist(-1, this.#tableName)
     return row
   }
 
