@@ -4,7 +4,7 @@ module.exports = {
       name: "astu-backend",
       script: "src/web_server/srv.ts",
       interpreter: "bun",
-      args: "--env-file=.env.production",
+      interpreter_args: "--env-file=.env.production",                                                                                                                                                          
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
