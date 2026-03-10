@@ -1,21 +1,13 @@
 import { DrizzleTableName } from '@/db/drizzle/schema'
 import { Doc } from '../document'
-import { topUp } from '@/db/drizzle/schema'
-import { InferSelectModel } from 'drizzle-orm'
 import { TopUpPluginInfo } from '../topUpPluginInfo/topUpPluginInfo'
 import { RtsError } from '@/lib/errors'
 import dayjs from 'dayjs'
 import { TopUpGroup, TopUpGroupFields } from '../topUpGroup/topUpGroup'
 import { logMethod } from '@/lib/logger'
+import { topUpStatuses, type TopUpStatus, type TopUpAction, type TopUpServiceType, type TopUpFields } from './topUpTypes'
 
-export const topUpStatuses = ['NEW', 'ERROR', 'DONE', 'CANCELED'] as const
-export type TopUpStatus = typeof topUpStatuses[number]
-export type TopUpAction = 'MakeDone'
-export type TopUpServiceType = 'inet' | 'iptv' | 'phone' | 'cdma'
-
-type TopUpServiceTypeField = { serviceType: TopUpServiceType }
-type TopUpStatusField = { status: TopUpStatus }
-export type TopUpFields = Omit<InferSelectModel<typeof topUp>, 'status' | 'serviceType'> & TopUpStatusField & TopUpServiceTypeField
+export { topUpStatuses, type TopUpStatus, type TopUpAction, type TopUpServiceType, type TopUpFields }
 
 export const topUpStatusActions = {
   'NEW': {
@@ -66,8 +58,7 @@ export class TopUp extends Doc<TopUpFields> {
     const pluginInfo = new TopUpPluginInfo(this._dbFabric)
     await pluginInfo.loadExistingByName(this.fields.pluginInfoName)
     const path = `../topUpPlugins/${pluginInfo.fields.plugin}`
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const pluginModule = require(path) as ITopUpPluginModule
+    const pluginModule = await import(path) as ITopUpPluginModule
 
     this.plugin = pluginModule.default()
     return this.plugin

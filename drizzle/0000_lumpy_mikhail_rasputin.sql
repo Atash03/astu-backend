@@ -1,2 +1,155 @@
-/*
-*/
+-- Current sql file was generated after introspecting the database
+-- If you want to run this migration please uncomment this code before executing migrations
+
+CREATE TABLE IF NOT EXISTS "_prisma_migrations" (
+	"id" varchar(36) PRIMARY KEY NOT NULL,
+	"checksum" varchar(64) NOT NULL,
+	"finished_at" timestamp with time zone,
+	"migration_name" varchar(255) NOT NULL,
+	"logs" text,
+	"rolled_back_at" timestamp with time zone,
+	"started_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"applied_steps_count" integer DEFAULT 0 NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "admins" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"email" varchar DEFAULT '' NOT NULL,
+	"encrypted_password" varchar DEFAULT '' NOT NULL,
+	"reset_password_token" varchar,
+	"reset_password_sent_at" timestamp(3),
+	"remember_created_at" timestamp(3),
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "ar_internal_metadata" (
+	"key" varchar PRIMARY KEY NOT NULL,
+	"value" varchar,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "gts_users" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"email" varchar DEFAULT '' NOT NULL,
+	"encrypted_password" varchar DEFAULT '' NOT NULL,
+	"reset_password_token" varchar,
+	"reset_password_sent_at" timestamp(3),
+	"remember_created_at" timestamp(3),
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "lite_banks" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"bank" text NOT NULL,
+	"enabled" boolean DEFAULT true NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "lite_notifications" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"title_ru" text NOT NULL,
+	"title_tm" text NOT NULL,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"text_tm" text NOT NULL,
+	"text_ru" text NOT NULL,
+	"date_till_show" timestamp(3)
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "lite_otp" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"code" char(4) NOT NULL,
+	"device_id" text NOT NULL,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"mobile_phone_number" text NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "lite_services" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"service" text NOT NULL,
+	"enabled" boolean DEFAULT true NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "lite_users" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"mobile_phone_number" varchar NOT NULL,
+	"device_id" varchar NOT NULL,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "topup_transaction_details" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"topup_transaction_id" integer,
+	"service_type" varchar,
+	"contract_number" varchar,
+	"billing_receipt" varchar,
+	"amount" integer,
+	"status" integer,
+	"error_code" varchar,
+	"provider_receipt" varchar,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "notifications" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"title" varchar,
+	"message" varchar,
+	"message_read" integer,
+	"user_id" integer NOT NULL,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "topup_transactions" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"phone_number" varchar,
+	"order_number" varchar,
+	"order_id" varchar,
+	"card_number" varchar,
+	"card_holder" varchar,
+	"card_expire_date" varchar,
+	"deposited_amount" numeric(10, 2),
+	"total_amount" integer,
+	"status" integer,
+	"error_code" varchar,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) NOT NULL,
+	"action_code" varchar,
+	"bank_name" varchar,
+	"description" varchar,
+	"lite_user_id" integer,
+	"payment_request_id" varchar,
+	"deleted_at" timestamp(3)
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "users" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"phone_number" varchar,
+	"password_digest" varchar,
+	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) NOT NULL
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "admins_email_key" ON "admins" ("email");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "admins_reset_password_token_key" ON "admins" ("reset_password_token");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "gts_users_email_key" ON "gts_users" ("email");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "gts_users_reset_password_token_key" ON "gts_users" ("reset_password_token");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "lite_banks_bank_key" ON "lite_banks" ("bank");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "lite_services_service_key" ON "lite_services" ("service");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "lite_users_mobile_phone_number_device_id_key" ON "lite_users" ("mobile_phone_number","device_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "notifications_user_id_key" ON "notifications" ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "topup_transactions_order_id_key" ON "topup_transactions" ("order_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "users_phone_number_key" ON "users" ("phone_number");--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "topup_transaction_details" ADD CONSTRAINT "topup_transaction_details_topup_transaction_id_fkey" FOREIGN KEY ("topup_transaction_id") REFERENCES "public"."topup_transactions"("id") ON DELETE set null ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;

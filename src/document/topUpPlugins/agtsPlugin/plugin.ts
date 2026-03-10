@@ -1,4 +1,4 @@
-import { TopUpFields, TopUpServiceType } from '@/document/topUp/topUp'
+import { type TopUpFields, type TopUpServiceType } from '@/document/topUp/topUpTypes'
 import { getAgtsApi } from './agts-api/agtsApiFabric'
 import { RtsError } from '@/lib/errors'
 import dayjs from 'dayjs'

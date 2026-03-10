@@ -1,4 +1,4 @@
-import { TopUpFields } from '@/document/topUp/topUp'
+import { type TopUpFields } from '@/document/topUp/topUpTypes'
 import * as cdmaApi from '@/lib/agts-cdma'
 import { RtsError } from '@/lib/errors'
 

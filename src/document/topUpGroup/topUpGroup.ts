@@ -101,6 +101,7 @@ export class TopUpGroup extends Doc<TopUpGroupFields> {
           {sum, amount: this.fields.amount})
     })
 
+    console.log('bankPluginInfoName:', this.sessionData['bankPluginInfoName'])
     const res1 = await MsPay.payment.doAction('New', {
       fields: { 
         vendorName: this.sessionData['vendorName'],
